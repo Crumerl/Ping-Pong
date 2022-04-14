@@ -28,6 +28,8 @@ class Player(GameObject):
             self.HitBox.y += self.Speed
         if keys[pygame.K_w]:
             self.HitBox.y -= self.Speed
+    def auto_move(self):
+        self.HitBox.centery = S_Ball.HitBox.centery
 
 S_Player = Player(50, h/2, 32, 100, (34, 45, 56), 5)
 SS_Player = Player(750, h/2, 32, 100, (34, 45, 56), 5)
@@ -43,8 +45,9 @@ class Ball(GameObject):
             self.Y_Speed *= -1
     
     def Collide(self):
-        if self.HitBox.center == S_Player.HitBox.center:
-            self.Y_Speed *= -1
+        if self.HitBox.colliderect(S_Player.HitBox):
+            self.X_Speed *= -1
+        if self.HitBox.colliderect(SS_Player.HitBox):
             self.X_Speed *= -1
 
 S_Ball = Ball(400, 320, 32, 32, (0,0,0), 5)
@@ -61,5 +64,7 @@ while game:
     screen.blit(S_Ball.Image, S_Ball.HitBox)
     S_Player.move()
     S_Ball.Move()
+    S_Ball.Collide()
+    SS_Player.auto_move()
 
     pygame.display.update()
